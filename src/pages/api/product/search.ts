@@ -3,7 +3,7 @@ import type {NextApiRequest, NextApiResponse} from 'next';
 import {Builder, By, Key, until} from 'selenium-webdriver';
 import Chrome from 'selenium-webdriver/chrome';
 
-const PATH = `C:\\Program Files (x86)\\chromedriver\\chromedriver.exe`;
+const PATH = `C:\\Users\\SampsonB\\Downloads\\chromedriver_win32\\chromedriver.exe`;
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
