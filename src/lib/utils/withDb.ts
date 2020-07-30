@@ -7,6 +7,7 @@ export default (fn: Function) => async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
+  if (mongoose.connections[0].readyState) return;
   let db: Connection;
   try {
     await mongoose.connect(

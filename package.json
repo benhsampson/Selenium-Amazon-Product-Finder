@@ -21,9 +21,14 @@
     "posttest": "yarn.cmd run check"
   },
   "devDependencies": {
+    "@types/bcrypt": "^3.0.0",
     "@types/chromedriver": "^81.0.0",
+    "@types/cookie-session": "^2.0.41",
     "@types/mongoose": "^5.7.32",
     "@types/node": "^14.0.26",
+    "@types/passport": "^1.0.4",
+    "@types/passport-jwt": "^3.0.3",
+    "@types/passport-local": "^1.0.33",
     "@types/react": "^16.9.43",
     "@types/selenium-webdriver": "^4.0.9",
     "@typescript-eslint/eslint-plugin": "^3.7.1",
@@ -37,8 +42,14 @@
     "typescript-eslint": "^0.0.1-alpha.0"
   },
   "dependencies": {
+    "bcrypt": "^5.0.0",
+    "cookie-session": "^1.4.0",
+    "micro-redirect": "^1.0.2",
     "mongoose": "^5.9.26",
     "next": "^9.5.0",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "passport-local": "^1.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "selenium-webdriver": "^4.0.0-alpha.7"
