@@ -1,7 +1,8 @@
 import type {Document, Model} from 'mongoose';
 
-import * as mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 const SALT_WORK_FACTOR = 10;
 
@@ -11,7 +12,7 @@ const expMonthRegex = /^[1-9]|1[012]$]/g;
 const expYearRegex = /^\d{4}$/g;
 const cvcCodeRegex = /^\d{3}$/g;
 
-export interface UserSchema {
+export interface User {
   name: string;
   email: string;
   password: string;
@@ -29,8 +30,9 @@ export interface UserSchema {
   cvc_code: number;
 }
 
-export interface UserDocument extends UserSchema, Document {
-  comparePassword(candidatePassword: string): UserDocument;
+export interface UserDocument extends User, Document {
+  comparePassword(candidatePassword: string): Promise<boolean>;
+  issueJwt(): {token: string; expiresIn: string};
 }
 
 const UserSchema = new mongoose.Schema({
@@ -131,18 +133,29 @@ UserSchema.pre('save', function (next) {
 });
 
 UserSchema.methods.comparePassword = function (candidatePassword: string) {
-  return bcrypt.compare(candidatePassword, this.password, function (
-    err,
-    isMatch
-  ) {
-    if (err) throw err;
-    return isMatch;
-  });
+  return bcrypt.compare(candidatePassword, this.password);
 };
 
-const User = mongoose.model<UserDocument, Model<UserDocument>>(
-  'User',
-  UserSchema
-);
+UserSchema.methods.issueJwt = function () {
+  const payload = {
+    sub: this._id,
+    iat: Date.now(),
+  };
+  const expiresIn = '1d';
+  const signedToken = jwt.sign(
+    payload,
+    // TODO: private key
+    'secret',
+    {
+      expiresIn,
+      // algorithm: 'RS256',
+    }
+  );
+  return {
+    token: `Bearer ${signedToken}`,
+    expiresIn,
+  };
+};
 
-export default User;
+export default mongoose.models.User ||
+  mongoose.model<UserDocument, Model<UserDocument>>('User', UserSchema);
