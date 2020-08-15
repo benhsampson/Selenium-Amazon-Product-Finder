@@ -3,10 +3,10 @@ import type {NextApiRequest, NextApiResponse} from 'next';
 // import {Builder, By, until} from 'selenium-webdriver';
 // import Chrome from 'selenium-webdriver/chrome';
 
-import cors from '../../../lib/utils/withCors';
-import withPassport from '../../../lib/utils/withPassport';
-import dbConnect from '../../../lib/utils/dbConnect';
-import User from '../../../lib/models/user';
+import cors from '../../lib/utils/withCors';
+import withPassport from '../../lib/utils/withPassport';
+import dbConnect from '../../lib/utils/dbConnect';
+import User from '../../lib/models/user';
 
 // const PATH = `C:\\Program Files (x86)\\chromedriver\\chromedriver.exe`;
 

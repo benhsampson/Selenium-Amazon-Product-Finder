@@ -1,30 +1,42 @@
-import {useState, useCallback} from 'react';
+import type {AxiosRequestConfig} from 'axios';
+
+import {useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 
 interface UseFetchDataParams {
   url: string;
   payload: object;
+  config?: AxiosRequestConfig;
+  immediate?: boolean;
 }
 
-const useFetchData = ({url, payload}: UseFetchDataParams) => {
-  const [res, setRes] = useState({data: null, error: null, isLoading: false});
+const useFetchData = ({
+  url,
+  payload,
+  config,
+  immediate = false,
+}: UseFetchDataParams) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [data, setData] = useState((null as unknown) as any);
+  const [error, setError] = useState((null as unknown) as Error);
 
-  const callApi = useCallback(() => {
-    setRes(prevState => ({...prevState, isLoading: true}));
+  const execute = useCallback(() => {
+    setIsLoading(true);
+
     return axios
-      .post(url, payload)
-      .then(res => {
-        console.log('succeeded');
-        setRes({data: res.data, isLoading: false, error: null});
-      })
-      .catch(error => {
-        console.error('failed', error);
-        setRes({data: null, isLoading: false, error});
-        throw error;
-      });
+      .post(url, payload, config)
+      .then(res => setData(res.data))
+      .catch(err => setError(err))
+      .finally(() => setIsLoading(false));
   }, [url, payload]);
 
-  return {res, callApi};
+  useEffect(() => {
+    if (immediate) {
+      execute();
+    }
+  }, [immediate]);
+
+  return {execute, isLoading, data, error};
 };
 
 export default useFetchData;
